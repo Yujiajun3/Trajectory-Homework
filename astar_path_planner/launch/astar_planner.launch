@@ -13,6 +13,11 @@
     <arg name="goal_x" default="4.5" />
     <arg name="goal_y" default="4.5" />
 
+    <!-- 设置 path short cut 的避障阈值-->
+    <arg name="short_cut_threshold" default="0.1" />
+    <arg name="inflate_radius" default="2" />
+    
+
     <!-- 启动障碍物生成节点 -->
     <node pkg="astar_path_planner" type="obstacle_generator" name="obstacle_generator" output="screen">
         <param name="map_min" value="$(arg map_min)" />
@@ -32,6 +37,8 @@
         <param name="start_y" value="$(arg start_y)" />
         <param name="goal_x" value="$(arg goal_x)" />
         <param name="goal_y" value="$(arg goal_y)" />
+        <param name="short_cut_threshold" value="$(arg short_cut_threshold)" />
+        <param name="inflate_radius" value="$(arg inflate_radius)" />
     </node>
 
     <!--    启动轨迹生成节点-->
