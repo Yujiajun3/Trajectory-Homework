@@ -1,0 +1,52 @@
+<launch>
+    <!-- 设置 RViz 配置文件路径 -->
+    <arg name="rviz_config" default="$(find astar_path_planner)/rviz/astar_path_planner.rviz" />
+
+    <!-- 设置地图相关参数，提供默认值 -->
+    <arg name="map_min" default="-5.0" />
+    <arg name="map_max" default="5.0" />
+    <arg name="grid_resolution" default="0.1" />
+
+    <!-- 设置起点和终点，提供默认值 -->
+    <arg name="start_x" default="-4.5" />
+    <arg name="start_y" default="-4.5" />
+    <arg name="goal_x" default="4.5" />
+    <arg name="goal_y" default="4.5" />
+
+    <!-- 设置 path short cut 的避障阈值-->
+    <arg name="short_cut_threshold" default="0.1" />
+    <arg name="inflate_radius" default="2" />
+    
+
+    <!-- 启动障碍物生成节点 -->
+    <node pkg="astar_path_planner" type="obstacle_generator" name="obstacle_generator" output="screen">
+        <param name="map_min" value="$(arg map_min)" />
+        <param name="map_max" value="$(arg map_max)" />
+        <param name="grid_resolution" value="$(arg grid_resolution)" />
+        <param name="num_obstacles" value="30.0" />
+        <param name="min_radius" value="0.2" />
+        <param name="max_radius" value="0.5" />
+    </node>
+
+    <!--     启动 A* 路径规划节点-->
+    <node pkg="astar_path_planner" type="astar_planner" name="astar_planner" output="screen">
+        <param name="map_min" value="$(arg map_min)" />
+        <param name="map_max" value="$(arg map_max)" />
+        <param name="grid_resolution" value="$(arg grid_resolution)" />
+        <param name="start_x" value="$(arg start_x)" />
+        <param name="start_y" value="$(arg start_y)" />
+        <param name="goal_x" value="$(arg goal_x)" />
+        <param name="goal_y" value="$(arg goal_y)" />
+        <param name="short_cut_threshold" value="$(arg short_cut_threshold)" />
+        <param name="inflate_radius" value="$(arg inflate_radius)" />
+    </node>
+
+    <!--    启动轨迹生成节点-->
+    <!--    your code-->
+
+
+
+
+    <!-- 启动 RViz -->
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(arg rviz_config)" />
+</launch>
