@@ -12,6 +12,7 @@ clone本仓库代码到ros工作空间夹的src文件夹下
 
 ```bash
 sudo apt update
+sudo apt install libspdlog-dev
 sudo apt install cpufrequtils
 sudo apt install libompl-dev
 sudo cpufreq-set -g performance
