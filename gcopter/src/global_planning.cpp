@@ -97,9 +97,7 @@ private:
     Trajectory<5> traj;
     double trajStamp;
 
-    // cnh
-    ros::Publisher debug_pc_pub;
-    // cnh
+    //ros::Publisher debug_pc_pub;
 
 public:
     GlobalPlanner(const Config &conf,
@@ -123,8 +121,8 @@ public:
         targetSub = nh.subscribe(config.targetTopic, 1, &GlobalPlanner::targetCallBack, this,
                                  ros::TransportHints().tcpNoDelay());
 
-        // cnh
-        debug_pc_pub = nh.advertise<sensor_msgs::PointCloud2>("cnh_debug_pc", 5);
+        
+        //debug_pc_pub = nh.advertise<sensor_msgs::PointCloud2>("debug_pc", 5);
     }
 
     inline void mapCallBack(const sensor_msgs::PointCloud2::ConstPtr &msg)
@@ -139,7 +137,7 @@ public:
             {
                 cur = msg->point_step / sizeof(float) * i;
                 //print all the points
-                std::cout<<"x: "<<fdata[cur + 0]<<" y: "<<fdata[cur + 1]<<" z: "<<fdata[cur + 2]<<std::endl;
+                //std::cout<<"x: "<<fdata[cur + 0]<<" y: "<<fdata[cur + 1]<<" z: "<<fdata[cur + 2]<<std::endl;
                 if (std::isnan(fdata[cur + 0]) || std::isinf(fdata[cur + 0]) ||
                     std::isnan(fdata[cur + 1]) || std::isinf(fdata[cur + 1]) ||
                     std::isnan(fdata[cur + 2]) || std::isinf(fdata[cur + 2]))
@@ -163,6 +161,9 @@ public:
     {
         if (config.optbegin)
         {
+            // 记录时间
+            auto start = std::chrono::high_resolution_clock::now();
+
             std::vector<Eigen::Vector3d> route;
             for (const auto &pose : msg->poses)
             {
@@ -170,7 +171,7 @@ public:
                 double z = static_cast<double>(rand()) / RAND_MAX * 0.5;
                 route.emplace_back(pose.pose.position.x, pose.pose.position.y, z);
             }
-            std::cout<<"route size: "<<route.size()<<std::endl;
+            //std::cout<<"route size: "<<route.size()<<std::endl;
             // sfc_gen::planPath<voxel_map::VoxelMap>(startGoal[0],
             //                                        startGoal[1],
             //                                        voxelMap.getOrigin(),
@@ -181,25 +182,25 @@ public:
             std::vector<Eigen::Vector3d> pc;
             voxelMap.getSurf(pc);
 
-            auto pc2pointcoud = [&pc, this]()->sensor_msgs::PointCloud2
-            {
-                sensor_msgs::PointCloud2 msg;
-                pcl::PointCloud<pcl::PointXYZ> pc_pcl;
+            // auto pc2pointcoud = [&pc, this]()->sensor_msgs::PointCloud2
+            // {
+            //     sensor_msgs::PointCloud2 msg;
+            //     pcl::PointCloud<pcl::PointXYZ> pc_pcl;
 
-                for (auto& pt:pc)
-                {
-                    pcl::PointXYZ pt_pcl(pt.x(), pt.y(), pt.z());
-                    pc_pcl.push_back(pt_pcl);
-                }
+            //     for (auto& pt:pc)
+            //     {
+            //         pcl::PointXYZ pt_pcl(pt.x(), pt.y(), pt.z());
+            //         pc_pcl.push_back(pt_pcl);
+            //     }
 
-                pcl::toROSMsg(pc_pcl, msg);
-                msg.header.frame_id="odom";
-                msg.header.stamp = ros::Time::now();
-                return msg;
-            };
+            //     pcl::toROSMsg(pc_pcl, msg);
+            //     msg.header.frame_id="odom";
+            //     msg.header.stamp = ros::Time::now();
+            //     return msg;
+            // };
 
-            auto msg = pc2pointcoud();
-            debug_pc_pub.publish(msg);
+            // auto msg = pc2pointcoud();
+            // debug_pc_pub.publish(msg);
 
             sfc_gen::convexCover(route,
                                  pc,
@@ -269,8 +270,10 @@ public:
                 if (traj.getPieceNum() > 0)
                 {
                     std::cout<<"Trajectory planned"<<std::endl;
+                    auto end = std::chrono::high_resolution_clock::now();
+                    std::cout<<"Time: "<<std::chrono::duration_cast<std::chrono::milliseconds>(end-start).count()<<std::endl;
                     config.optbegin = false;
-                    trajStamp = ros::Time::now().toSec();
+                    //trajStamp = ros::Time::now().toSec();
                     visualizer.visualize(traj, route);
                 }
             }
@@ -394,7 +397,7 @@ public:
             // {
             //     ROS_WARN("Infeasible Position Selected !!!\n");
             // }
-            std::cout << "Received target" << std::endl;
+            // std::cout << "Received target" << std::endl;
             plan(msg);
         }
         return;
