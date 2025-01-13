@@ -45,7 +45,8 @@ pcl::PointCloud<pcl::PointXYZ>::Ptr createCylinderPointCloud(double x, double y,
     pcl::PointCloud<pcl::PointXYZ>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZ>);
 
     std::random_device rd;
-    std::mt19937 gen(rd());
+    // 1024 has more better output
+    std::mt19937 gen(1024);
     std::uniform_real_distribution<> angle_dist(0, 2 * M_PI);
     std::uniform_real_distribution<> height_dist(0, height);
 
