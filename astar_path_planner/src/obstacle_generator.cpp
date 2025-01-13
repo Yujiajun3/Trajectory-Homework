@@ -84,6 +84,7 @@ int main(int argc, char** argv) {
 
 
     std::random_device rd;
+    // 1024 是随机数种子 效果较好，可以改成rd()
     std::mt19937 gen(1024);
     std::uniform_real_distribution<> pos_dist(map_min_, map_max_);
     std::uniform_real_distribution<> radius_dist(min_radius_, max_radius_);
