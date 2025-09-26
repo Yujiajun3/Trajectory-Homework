@@ -1,7 +1,9 @@
 # Trajectory-Homework-for-ZJU-Intelligent-Mobile-Robot-Course
 The A * algorithm used in the front-end (The front-end has optimized the A * algorithm with shortcut through visibility) and the Minco algorithm used in the back-end
+
 # 项目成绩 🎉
 <p style="color: green; font-size: 24px;"><strong>成绩：98 分</strong> 🌟</p>
+
 ## 安装方式
 
 clone本仓库代码到ros工作空间夹的src文件夹下
